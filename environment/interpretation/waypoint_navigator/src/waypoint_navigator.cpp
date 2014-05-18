@@ -66,6 +66,7 @@ geometry_msgs::Pose2D WaypointNavigator::interpret() {
         geometry_msgs::Pose2D target_relative_pose;
         target_relative_pose.x = temp_rel_pose.x* cos(alpha) + temp_rel_pose.y* sin(alpha);
         target_relative_pose.y = -temp_rel_pose.x* sin(alpha) + temp_rel_pose.y* cos(alpha);
-
+        target_relative_pose.theta = M_PI/2;
+        
     return target_relative_pose;
 }

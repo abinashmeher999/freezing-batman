@@ -124,6 +124,7 @@ std::vector<std::pair<sensor_msgs::NavSatFix, bool> >::iterator Waypoint_Selecto
 }
 
 bool Waypoint_Selector::seeifReached(std::vector<std::pair<sensor_msgs::NavSatFix, bool> >::iterator target_ptr) {
+    //std::cout<<"proximity:"<<proximity<<std::endl;
     if (getMod(interpret(current_gps_position_, target_ptr->first)) < proximity || planner_status_ == "TARGET REACHED") {
         target_ptr->second = true;
         last_waypoint_ = target_ptr;
