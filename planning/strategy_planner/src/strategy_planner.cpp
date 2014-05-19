@@ -17,16 +17,20 @@ void Strategy_Planner::setLaneTarget(geometry_msgs::Pose2D proposed_lane_target_
 }
 
 void Strategy_Planner::setEmergency(std_msgs::String status) {
-    if (status.data == "NO PATH FOUND" || status.data == "OPEN LIST OVERFLOW") {
-        is_emergency_ = false;
-    } else {
+    if (status.data == "NO PATH FOUND" || status.data == "OPEN LIST OVERFLOW" || status.data == "TARGET BEHIND") {
         is_emergency_ = true;
+    } else {
+        is_emergency_ = false;
     }
     emergency_status = (status.data);
 }
 
 void Strategy_Planner::setNmlFlag(std_msgs::Bool flag) {
-    run_waypoint_navigator = flag.data;
+    nml_flag = flag.data;
+}
+
+void Strategy_Planner::setConfidence(std_msgs::Bool confidence) {
+    is_confident_ = confidence.data;
 }
 
 void Strategy_Planner::setFinalTarget(geometry_msgs::Pose2D set_target_) {
@@ -42,37 +46,47 @@ void Strategy_Planner::setWhichNavigator(std::string navigator) {
 }
 
 void Strategy_Planner::setPlanner(int planner) {
-    planners = planner; //see enum for int values
+    planners_ = planner;
+    switch (planner) {//see enum for int values
+        case a_star_seed:
+            setWhichPlanner(std::string("A_Star_Seed"));
+        case quick_response:
+            setWhichPlanner(std::string("Quick_Response"));
+    }
 }
 
-void Strategy_Planner::setNavigator(int navigator_) {
-    navigators = navigator_; //see enum for int values
+void Strategy_Planner::setNavigator(int navigator) {
+    navigators_ = navigator;
+    switch (navigator) {//see enum for int values
+        case dummy_navigator:
+            setWhichNavigator(std::string("Dummy_Navigator"));
+            setFinalTarget(getDummyTarget());
+        case nose_navigator:
+            setWhichNavigator(std::string("Nose_Navigator"));
+            setFinalTarget(getNoseTarget());
+        case waypoint_navigator:
+            setWhichNavigator(std::string("Waypoint_Navigator"));
+            setFinalTarget(getWaypointTarget());
+        case lane_navigator:
+            setWhichNavigator(std::string("Lane_Navigator"));
+            setFinalTarget(getLaneTarget());
+    }
+
 }
 
 void Strategy_Planner::plan() {
     if (!is_emergency_) {
-        setPlanner(0);
+        setPlanner(a_star_seed);
     } else {
-        setPlanner(1);
+        setPlanner(quick_response);
     }
-    if (!run_waypoint_navigator) {
-        setNavigator(3);
+    if (nml_flag) {
+        setNavigator(waypoint_navigator);
     } else {
-        setNavigator(2);
+        if (is_confident_) {
+            setNavigator(lane_navigator);
+        } else {
+            setNavigator(waypoint_navigator);
+        }
     }
-    switch (planners) {
-        case quick_response:
-            setWhichPlanner("Quick_Response");
-            break;
-        default:
-            setWhichPlanner("A_Star_Seed");
-    }
-    switch (navigators) {
-        case lane_navigator:
-            setWhichNavigator("Lane_Navigator");
-            break;
-        default:
-            setWhichNavigator("Waypoint_Navigator");
-    }
-
 }

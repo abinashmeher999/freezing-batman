@@ -23,7 +23,7 @@ int main(int argc, char* argv[]) {
 
     ros::Rate loop_rate(loop_rate_hz);
     while (ros::ok()) {
-        node_handle.getParam(std::string("/") + node_name + std::string("/proximity"), waypoint_selector.proximity);
+        node_handle.getParam(std::string("/") + node_name + std::string("/proximity"), waypoint_selector.proximity_);
         ros::spinOnce();
         target = waypoint_selector.getTarget();
         nml = waypoint_selector.ifnml();

@@ -33,8 +33,8 @@ class Strategy_Planner {
     std::string emergency_status;
     std::string which_planner_;
     std::string which_navigator_;
-    int navigators, planners;
-    bool run_waypoint_navigator;
+    int navigators_, planners_;
+    bool nml_flag, is_confident_;
 
 public:
     void plan();
@@ -47,8 +47,9 @@ public:
     void setNoseTarget(geometry_msgs::Pose2D proposed_nose_target_);
     void setWaypointTarget(geometry_msgs::Pose2D proposed_waypoint_target_);
     void setLaneTarget(geometry_msgs::Pose2D proposed_lane_target_);
-    void setNavigator(int navigator_);
+    void setNavigator(int navigator);
     void setPlanner(int planner);
+    void setConfidence(std_msgs::Bool confidence);
 
     inline geometry_msgs::Pose2D getDummyTarget() const {
         return dummy_target_;
