@@ -50,8 +50,10 @@ void Strategy_Planner::setPlanner(int planner) {
     switch (planner) {//see enum for int values
         case a_star_seed:
             setWhichPlanner(std::string("A_Star_Seed"));
+            break;
         case quick_response:
             setWhichPlanner(std::string("Quick_Response"));
+            break;
     }
 }
 
@@ -61,15 +63,19 @@ void Strategy_Planner::setNavigator(int navigator) {
         case dummy_navigator:
             setWhichNavigator(std::string("Dummy_Navigator"));
             setFinalTarget(getDummyTarget());
+            break;
         case nose_navigator:
             setWhichNavigator(std::string("Nose_Navigator"));
             setFinalTarget(getNoseTarget());
+            break;
         case waypoint_navigator:
             setWhichNavigator(std::string("Waypoint_Navigator"));
             setFinalTarget(getWaypointTarget());
+            break;
         case lane_navigator:
             setWhichNavigator(std::string("Lane_Navigator"));
             setFinalTarget(getLaneTarget());
+            break;
     }
 
 }
