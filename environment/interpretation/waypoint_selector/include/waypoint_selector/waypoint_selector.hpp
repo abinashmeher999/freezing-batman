@@ -15,6 +15,7 @@
 
 static const int loop_rate_hz = 10;
 static const int buffer_size = 10;
+static const int altitude_preset = 59;
 
 enum Strategy {
     greedy_selector = 0,
@@ -24,6 +25,7 @@ enum Strategy {
 class Waypoint_Selector {
     std::string planner_status_;
     int strategy_;
+    int no_waypoints_;
     unsigned int no_visited_waypoints_;
     bool is_nml_;
     std::ifstream waypoints_;
@@ -34,7 +36,7 @@ class Waypoint_Selector {
 public:
     double proximity_;
 
-    bool readWaypoints(std::ifstream& waypoints, std::vector<std::pair<sensor_msgs::NavSatFix, bool> >& gps_waypoints, std::string filename);
+    bool readWaypoints(std::ifstream& waypoints, std::vector<std::pair<sensor_msgs::NavSatFix, bool> >& gps_waypoints,int& no_waypoints, std::string filename);
     geometry_msgs::Pose2D interpret(sensor_msgs::NavSatFix current, sensor_msgs::NavSatFix target);
     double getMod(geometry_msgs::Pose2D pose);
     void setCurrentPosition(sensor_msgs::NavSatFix subscriber_gps);
